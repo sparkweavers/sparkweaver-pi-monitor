@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Terminal output only. Nothing here knows about Docker or Uptime Kuma.
 
 readonly C_STEP=$'\033[1;36m' C_OK=$'\033[1;32m' C_ERR=$'\033[1;31m' C_OFF=$'\033[0m'
 

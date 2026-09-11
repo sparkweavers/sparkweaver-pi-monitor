@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Yes-or-no questions about the host. No side effects, no output.
 
 contains() {
   local needle="$1" item
@@ -12,7 +11,6 @@ contains() {
 
 has_command() { command -v "$1" >/dev/null 2>&1; }
 
-# Prints the status code, or an empty string when the host refuses the connection.
 http_code() { curl -s -o /dev/null -w '%{http_code}' "$1" 2>/dev/null || true; }
 
 port_in_use() { ss -lnt 2>/dev/null | grep -q ":${1} "; }
