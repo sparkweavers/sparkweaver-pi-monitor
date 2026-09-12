@@ -14,6 +14,17 @@ readonly SUPPORTED_ARCHS=(aarch64 arm64 x86_64 amd64)
 readonly HEALTHY_CODES=(200 302)
 readonly MANAGE_COMMANDS=(ps "logs -f" restart)
 
+readonly NETBIRD_SETUP_KEY="${NETBIRD_SETUP_KEY:-}"
+readonly NETBIRD_INSTALL_URL="${NETBIRD_INSTALL_URL:-https://pkgs.netbird.io/install.sh}"
+readonly NETBIRD_WAIT_ATTEMPTS=10
+
+readonly DATA_MOUNT=/app/data
+readonly DATABASE_FILE=kuma.db
+readonly BACKUP_DIR="${BACKUP_DIR:-$HOME/uptime-kuma-backups}"
+readonly BACKUP_IMAGE="${BACKUP_IMAGE:-alpine:3.20}"
+readonly BACKUP_KEEP="${BACKUP_KEEP:-5}"
+readonly ALLOW_MAJOR_UPGRADE="${ALLOW_MAJOR_UPGRADE:-0}"
+
 readonly KUMA_ADMIN_USER="${KUMA_ADMIN_USER:-}"
 readonly KUMA_ADMIN_PASSWORD="${KUMA_ADMIN_PASSWORD:-}"
 readonly MONITORS_FILE="${MONITORS_FILE:-$SCRIPT_DIR/monitors.json}"
