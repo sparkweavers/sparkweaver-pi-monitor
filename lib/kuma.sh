@@ -13,10 +13,8 @@ extra_hosts_block() {
   done
 }
 
-write_compose_file() {
-  sudo mkdir -p "$INSTALL_DIR"
-  {
-    cat <<YAML
+kuma_service_block() {
+  cat <<YAML
 services:
   uptime-kuma:
     image: ${IMAGE}
@@ -27,12 +25,24 @@ services:
     volumes:
       - ${VOLUME}:/app/data
 YAML
-    extra_hosts_block
-    cat <<YAML
+}
+
+volumes_block() {
+  cat <<YAML
 
 volumes:
   ${VOLUME}:
+  ${SIGNAL_VOLUME}:
 YAML
+}
+
+write_compose_file() {
+  sudo mkdir -p "$INSTALL_DIR"
+  {
+    kuma_service_block
+    extra_hosts_block
+    signal_service_block
+    volumes_block
   } | sudo tee "$INSTALL_DIR/docker-compose.yml" >/dev/null
   ok "wrote $INSTALL_DIR/docker-compose.yml"
 }

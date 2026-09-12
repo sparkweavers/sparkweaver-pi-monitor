@@ -11,6 +11,25 @@ print_summary() {
   printf '\n  History lives in the %s volume and survives "docker compose down".\n\n' "$VOLUME"
 }
 
+print_signal_hint() {
+  if [ -n "$(linked_number)" ]; then
+    print_signal_summary
+    return 0
+  fi
+  printf '  Signal alerts are one step away. Run ./link-signal.sh to link this host\n'
+  printf '  to your Signal account.\n\n'
+}
+
+print_signal_summary() {
+  printf '\n  Add the notification in Uptime Kuma under Settings, Notifications,\n'
+  printf '  Setup Notification. Pick Signal and fill in:\n\n'
+  printf '    Post URL    %s\n' "$(send_endpoint)"
+  printf '    Number      %s\n' "$(linked_number)"
+  printf '    Recipients  %s\n\n' "$(linked_number)"
+  printf '  Sending to your own number puts the alerts in Note to Self.\n'
+  printf '  Use Test to prove it before you rely on it.\n\n'
+}
+
 print_no_change_summary() {
   printf '\n  Already on the newest %s, version %s. Nothing was changed.\n\n' "$IMAGE" "$(running_version)"
 }
