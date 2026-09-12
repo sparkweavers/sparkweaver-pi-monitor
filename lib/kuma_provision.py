@@ -9,6 +9,10 @@ USER = os.environ["KUMA_ADMIN_USER"]
 PASSWORD = os.environ["KUMA_ADMIN_PASSWORD"]
 MONITORS_FILE = os.environ["KUMA_MONITORS_FILE"]
 
+# Keys a re-run pushes onto monitors that already exist. Anything outside this
+# set stays as the dashboard left it.
+RECONCILED = ("url", "interval", "accepted_statuscodes")
+
 
 def read_specs(path):
     if not os.path.exists(path):
@@ -25,16 +29,29 @@ def ensure_admin(api):
 
 
 def index_by_name(api):
-    return {monitor["name"]: monitor["id"] for monitor in api.get_monitors()}
+    return {monitor["name"]: monitor for monitor in api.get_monitors()}
 
 
 def ensure_group(api, name, index):
     if name in index:
-        return index[name]
+        return index[name]["id"]
     response = api.add_monitor(type=MonitorType.GROUP, name=name)
-    index[name] = response["monitorID"]
+    index[name] = {"id": response["monitorID"], "name": name}
     print(f"created group {name}")
-    return index[name]
+    return index[name]["id"]
+
+
+def reconcile(api, monitor, spec):
+    changes = {
+        key: spec[key]
+        for key in RECONCILED
+        if key in spec and monitor.get(key) != spec[key]
+    }
+    if not changes:
+        return "unchanged"
+    api.edit_monitor(monitor["id"], **changes)
+    print(f"updated {monitor['name']}: {', '.join(sorted(changes))}")
+    return "updated"
 
 
 def ensure_monitor(api, spec, index):
@@ -42,14 +59,14 @@ def ensure_monitor(api, spec, index):
     group = spec.pop("group", None)
     name = spec["name"]
     if name in index:
-        return False
+        return reconcile(api, index[name], spec)
     if group:
         spec["parent"] = ensure_group(api, group, index)
     spec["type"] = MonitorType(spec["type"])
     response = api.add_monitor(**spec)
-    index[name] = response["monitorID"]
+    index[name] = {"id": response["monitorID"], "name": name}
     print(f"added monitor {name}")
-    return True
+    return "added"
 
 
 def main():
@@ -58,8 +75,9 @@ def main():
         print(f"admin account {ensure_admin(api)}")
         api.login(USER, PASSWORD)
         index = index_by_name(api)
-        added = sum(ensure_monitor(api, spec, index) for spec in specs)
-        print(f"{added} added, {len(specs) - added} already present")
+        results = [ensure_monitor(api, spec, index) for spec in specs]
+        for state in ("added", "updated", "unchanged"):
+            print(f"{results.count(state)} {state}")
     return 0
 
 

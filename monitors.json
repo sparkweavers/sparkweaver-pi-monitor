@@ -4,7 +4,7 @@
     "name": "Backend production",
     "url": "https://backend.sparkweaver.app/api",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["401"]
   },
   {
@@ -12,7 +12,7 @@
     "name": "AI production",
     "url": "https://agentic-ai.sparkweaver.app/api/health",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["401"]
   },
   {
@@ -20,7 +20,7 @@
     "name": "Supabase Kong production",
     "url": "https://supabase.sparkweaver.app/",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["401"]
   },
   {
@@ -28,7 +28,7 @@
     "name": "Supabase Auth production",
     "url": "https://supabase.sparkweaver.app/auth/v1/verify",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["400"]
   },
   {
@@ -36,7 +36,7 @@
     "name": "Supabase Storage production",
     "url": "https://supabase.sparkweaver.app/storage/v1/status",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["200-299"]
   },
   {
@@ -44,7 +44,7 @@
     "name": "Backend staging",
     "url": "https://backend-staging.sparkweaver.app/api",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["401"]
   },
   {
@@ -52,7 +52,7 @@
     "name": "AI staging",
     "url": "https://agentic-ai-staging.sparkweaver.app/api/health",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["401"]
   },
   {
@@ -60,7 +60,7 @@
     "name": "Supabase Kong staging",
     "url": "https://supabase-staging.sparkweaver.app/",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["401"]
   },
   {
@@ -68,7 +68,7 @@
     "name": "Supabase Auth staging",
     "url": "https://supabase-staging.sparkweaver.app/auth/v1/verify",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["400"]
   },
   {
@@ -76,7 +76,7 @@
     "name": "Supabase Storage staging",
     "url": "https://supabase-staging.sparkweaver.app/storage/v1/status",
     "group": "Sparkweaver",
-    "interval": 60,
+    "interval": 300,
     "accepted_statuscodes": ["200-299"]
   }
 ]
