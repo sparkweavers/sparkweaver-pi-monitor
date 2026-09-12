@@ -14,7 +14,7 @@ readonly SUPPORTED_ARCHS=(aarch64 arm64 x86_64 amd64)
 readonly HEALTHY_CODES=(200 302)
 readonly MANAGE_COMMANDS=(ps "logs -f" restart)
 
-readonly KUMA_ADMIN_USER="${KUMA_ADMIN_USER:-admin}"
+readonly KUMA_ADMIN_USER="${KUMA_ADMIN_USER:-}"
 readonly KUMA_ADMIN_PASSWORD="${KUMA_ADMIN_PASSWORD:-}"
 readonly MONITORS_FILE="${MONITORS_FILE:-$SCRIPT_DIR/monitors.json}"
 readonly PYTHON_IMAGE="${PYTHON_IMAGE:-python:3.12-slim}"
