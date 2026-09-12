@@ -45,6 +45,7 @@ main() {
   fi
 
   step "Backing up the data volume"
+  resolve_data_volume
   stop_stack
   backup_data_volume
   prune_backups

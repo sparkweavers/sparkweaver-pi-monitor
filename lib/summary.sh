@@ -20,6 +20,6 @@ print_update_summary() {
   printf '  To roll back, stop the stack and unpack the newest backup into the volume:\n\n'
   printf '    cd %s && docker compose down\n' "$INSTALL_DIR"
   printf '    docker run --rm -v %s:/data -v %s:/backup %s sh -c "rm -rf /data/* && tar xzf /backup/%s -C /data"\n' \
-    "$VOLUME" "$BACKUP_DIR" "$BACKUP_IMAGE" "$(basename "$(newest_backup)")"
+    "$DATA_VOLUME" "$BACKUP_DIR" "$BACKUP_IMAGE" "$BACKUP_NAME"
   printf '    cd %s && docker compose up -d\n\n' "$INSTALL_DIR"
 }

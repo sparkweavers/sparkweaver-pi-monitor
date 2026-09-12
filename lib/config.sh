@@ -18,6 +18,8 @@ readonly NETBIRD_SETUP_KEY="${NETBIRD_SETUP_KEY:-}"
 readonly NETBIRD_INSTALL_URL="${NETBIRD_INSTALL_URL:-https://pkgs.netbird.io/install.sh}"
 readonly NETBIRD_WAIT_ATTEMPTS=10
 
+readonly DATA_MOUNT=/app/data
+readonly DATABASE_FILE=kuma.db
 readonly BACKUP_DIR="${BACKUP_DIR:-$HOME/uptime-kuma-backups}"
 readonly BACKUP_IMAGE="${BACKUP_IMAGE:-alpine:3.20}"
 readonly BACKUP_KEEP="${BACKUP_KEEP:-5}"
