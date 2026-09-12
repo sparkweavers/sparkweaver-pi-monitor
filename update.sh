@@ -14,47 +14,49 @@ source "$SCRIPT_DIR/lib/predicates.sh"
 source "$SCRIPT_DIR/lib/docker.sh"
 # shellcheck source=lib/preflight.sh
 source "$SCRIPT_DIR/lib/preflight.sh"
-# shellcheck source=lib/docker_install.sh
-source "$SCRIPT_DIR/lib/docker_install.sh"
-# shellcheck source=lib/netbird.sh
-source "$SCRIPT_DIR/lib/netbird.sh"
 # shellcheck source=lib/kuma.sh
 source "$SCRIPT_DIR/lib/kuma.sh"
-# shellcheck source=lib/kuma_provision.sh
-source "$SCRIPT_DIR/lib/kuma_provision.sh"
+# shellcheck source=lib/backup.sh
+source "$SCRIPT_DIR/lib/backup.sh"
+# shellcheck source=lib/update.sh
+source "$SCRIPT_DIR/lib/update.sh"
 # shellcheck source=lib/summary.sh
 source "$SCRIPT_DIR/lib/summary.sh"
 
 main() {
+  local before after
+
   step "Checking the machine"
   require_normal_user
-  require_supported_arch
-
-  step "Providing Docker"
-  ensure_docker
-  ensure_compose_plugin
-  ensure_docker_service
-  ensure_docker_group
   select_docker_runner
-  require_free_port
+  require_installed
 
-  step "Joining the NetBird network"
-  ensure_netbird
+  step "Checking the upgrade is safe"
+  require_major_allowed
 
-  step "Writing the compose file"
+  step "Fetching the newest image"
+  before="$(image_digest)"
+  pull_image
+  after="$(image_digest)"
+
+  if [ -n "$before" ] && [ "$before" = "$after" ]; then
+    print_no_change_summary
+    return 0
+  fi
+
+  step "Backing up the data volume"
+  stop_stack
+  backup_data_volume
+  prune_backups
+
+  step "Starting the new image"
   write_compose_file
-
-  step "Starting the container"
   start_stack
 
   step "Waiting for Uptime Kuma to answer"
   wait_until_healthy
 
-  step "Provisioning the admin account and monitors"
-  provision_kuma
-
-  print_summary
-  print_allowlist_hint
+  print_update_summary
 }
 
 main "$@"

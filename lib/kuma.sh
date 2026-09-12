@@ -26,6 +26,12 @@ start_stack() {
   ok "container started"
 }
 
+stop_stack() {
+  cd "$INSTALL_DIR" || die "cannot enter $INSTALL_DIR"
+  compose down
+  ok "container stopped, the $VOLUME volume is untouched"
+}
+
 wait_until_healthy() {
   local url="http://127.0.0.1:${PORT}" code attempt
   for ((attempt = 0; attempt < WAIT_ATTEMPTS; attempt++)); do
