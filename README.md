@@ -1,7 +1,12 @@
 # sparkweaver-pi-monitor
 
-Installs [Uptime Kuma](https://github.com/louislam/uptime-kuma) on a Raspberry Pi as a
-Docker container, and provisions its monitors from `monitors.json`.
+Creating a self-hosted [Uptime Kuma](https://github.com/louislam/uptime-kuma) instance on
+Raspberry Pi.
+
+This repository is optimised for @BirgitPohl 's Raspberry Pi.
+
+It installs Uptime Kuma as a Docker container and provisions its monitors from
+`monitors.json`.
 
 ## Install
 
