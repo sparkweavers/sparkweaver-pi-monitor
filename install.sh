@@ -14,10 +14,12 @@ source "$SCRIPT_DIR/lib/predicates.sh"
 source "$SCRIPT_DIR/lib/docker.sh"
 # shellcheck source=lib/preflight.sh
 source "$SCRIPT_DIR/lib/preflight.sh"
-# shellcheck source=lib/provision.sh
-source "$SCRIPT_DIR/lib/provision.sh"
+# shellcheck source=lib/docker_install.sh
+source "$SCRIPT_DIR/lib/docker_install.sh"
 # shellcheck source=lib/kuma.sh
 source "$SCRIPT_DIR/lib/kuma.sh"
+# shellcheck source=lib/kuma_provision.sh
+source "$SCRIPT_DIR/lib/kuma_provision.sh"
 # shellcheck source=lib/summary.sh
 source "$SCRIPT_DIR/lib/summary.sh"
 
@@ -42,6 +44,9 @@ main() {
 
   step "Waiting for Uptime Kuma to answer"
   wait_until_healthy
+
+  step "Provisioning the admin account and monitors"
+  provision_kuma
 
   print_summary
 }

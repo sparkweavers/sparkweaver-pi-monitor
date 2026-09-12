@@ -1,0 +1,82 @@
+[
+  {
+    "type": "http",
+    "name": "Backend production",
+    "url": "https://backend.sparkweaver.app/api",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["401"]
+  },
+  {
+    "type": "http",
+    "name": "AI production",
+    "url": "https://agentic-ai.sparkweaver.app/api/health",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["401"]
+  },
+  {
+    "type": "http",
+    "name": "Supabase Kong production",
+    "url": "https://supabase.sparkweaver.app/",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["401"]
+  },
+  {
+    "type": "http",
+    "name": "Supabase Auth production",
+    "url": "https://supabase.sparkweaver.app/auth/v1/verify",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["400"]
+  },
+  {
+    "type": "http",
+    "name": "Supabase Storage production",
+    "url": "https://supabase.sparkweaver.app/storage/v1/status",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["200-299"]
+  },
+  {
+    "type": "http",
+    "name": "Backend staging",
+    "url": "https://backend-staging.sparkweaver.app/api",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["401"]
+  },
+  {
+    "type": "http",
+    "name": "AI staging",
+    "url": "https://agentic-ai-staging.sparkweaver.app/api/health",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["401"]
+  },
+  {
+    "type": "http",
+    "name": "Supabase Kong staging",
+    "url": "https://supabase-staging.sparkweaver.app/",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["401"]
+  },
+  {
+    "type": "http",
+    "name": "Supabase Auth staging",
+    "url": "https://supabase-staging.sparkweaver.app/auth/v1/verify",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["400"]
+  },
+  {
+    "type": "http",
+    "name": "Supabase Storage staging",
+    "url": "https://supabase-staging.sparkweaver.app/storage/v1/status",
+    "group": "Sparkweaver",
+    "interval": 60,
+    "accepted_statuscodes": ["200-299"]
+  }
+]

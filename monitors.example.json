@@ -1,0 +1,17 @@
+[
+  {
+    "type": "http",
+    "name": "Example site",
+    "url": "https://example.com",
+    "group": "Personal",
+    "interval": 60,
+    "accepted_statuscodes": ["200-299"]
+  },
+  {
+    "type": "http",
+    "name": "Example ungrouped API expecting 401",
+    "url": "https://example.com/api",
+    "interval": 60,
+    "accepted_statuscodes": ["401"]
+  }
+]
