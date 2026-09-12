@@ -14,6 +14,8 @@ source "$SCRIPT_DIR/lib/predicates.sh"
 source "$SCRIPT_DIR/lib/docker.sh"
 # shellcheck source=lib/preflight.sh
 source "$SCRIPT_DIR/lib/preflight.sh"
+# shellcheck source=lib/netbird.sh
+source "$SCRIPT_DIR/lib/netbird.sh"
 # shellcheck source=lib/kuma.sh
 source "$SCRIPT_DIR/lib/kuma.sh"
 # shellcheck source=lib/backup.sh

@@ -17,6 +17,8 @@ readonly MANAGE_COMMANDS=(ps "logs -f" restart)
 readonly NETBIRD_SETUP_KEY="${NETBIRD_SETUP_KEY:-}"
 readonly NETBIRD_INSTALL_URL="${NETBIRD_INSTALL_URL:-https://pkgs.netbird.io/install.sh}"
 readonly NETBIRD_WAIT_ATTEMPTS=10
+readonly TUNNEL_PEER_FQDN="${TUNNEL_PEER_FQDN:-database-server.netbird.cloud}"
+readonly TUNNEL_HOSTNAMES=(supabase.sparkweaver.app supabase-staging.sparkweaver.app)
 
 readonly DATA_MOUNT=/app/data
 readonly DATABASE_FILE=kuma.db

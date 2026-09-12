@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 
+extra_hosts_block() {
+  local ip host
+  ip="$(peer_ip_by_fqdn "$TUNNEL_PEER_FQDN")"
+  if [ -z "$ip" ]; then
+    note "peer $TUNNEL_PEER_FQDN is unknown, so the tunnelled hosts are left out"
+    return 0
+  fi
+  printf '    extra_hosts:\n'
+  for host in "${TUNNEL_HOSTNAMES[@]}"; do
+    printf '      - "%s:%s"\n' "$host" "$ip"
+  done
+}
+
 write_compose_file() {
   sudo mkdir -p "$INSTALL_DIR"
-  sudo tee "$INSTALL_DIR/docker-compose.yml" >/dev/null <<YAML
+  {
+    cat <<YAML
 services:
   uptime-kuma:
     image: ${IMAGE}
@@ -12,10 +26,14 @@ services:
       - "${PORT}:${CONTAINER_PORT}"
     volumes:
       - ${VOLUME}:/app/data
+YAML
+    extra_hosts_block
+    cat <<YAML
 
 volumes:
   ${VOLUME}:
 YAML
+  } | sudo tee "$INSTALL_DIR/docker-compose.yml" >/dev/null
   ok "wrote $INSTALL_DIR/docker-compose.yml"
 }
 
