@@ -8,6 +8,13 @@ netbird_peer_ip() {
   sudo netbird status 2>/dev/null | awk -F': *' '/NetBird IP:/ {print $2; exit}'
 }
 
+peer_ip_by_fqdn() {
+  sudo netbird status -d 2>/dev/null | awk -v want="$1:" '
+    $1 == want { found = 1; next }
+    found && $1 == "NetBird" && $2 == "IP:" { print $3; exit }
+  '
+}
+
 install_netbird_agent() {
   if has_command netbird; then
     ok "NetBird agent already installed"
