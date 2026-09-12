@@ -10,6 +10,12 @@ This Respository is optimized for @BirgitPohl 's Raspberry Pi.
 cd ~/sparkweaver-pi-monitor && KUMA_ADMIN_USER='admin-name' KUMA_ADMIN_PASSWORD='admin-password' NETBIRD_SETUP_KEY='reusable-setup-key' ./install.sh
 ```
 
+## Link Signal for alerts
+
+```
+cd ~/sparkweaver-pi-monitor && ./link-signal.sh
+```
+
 ## Update Uptime Kuma
 
 ```

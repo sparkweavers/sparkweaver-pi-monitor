@@ -20,6 +20,8 @@ source "$SCRIPT_DIR/lib/docker_install.sh"
 source "$SCRIPT_DIR/lib/netbird.sh"
 # shellcheck source=lib/kuma.sh
 source "$SCRIPT_DIR/lib/kuma.sh"
+# shellcheck source=lib/signal.sh
+source "$SCRIPT_DIR/lib/signal.sh"
 # shellcheck source=lib/kuma_provision.sh
 source "$SCRIPT_DIR/lib/kuma_provision.sh"
 # shellcheck source=lib/summary.sh
@@ -36,7 +38,7 @@ main() {
   ensure_docker_service
   ensure_docker_group
   select_docker_runner
-  require_free_port
+  require_free_ports
 
   step "Joining the NetBird network"
   ensure_netbird
@@ -55,6 +57,7 @@ main() {
 
   print_summary
   print_allowlist_hint
+  print_signal_hint
 }
 
 main "$@"

@@ -18,8 +18,14 @@ require_supported_arch() {
 }
 
 require_free_port() {
-  if port_in_use "$PORT" && ! container_running; then
-    die "port $PORT is held by something other than $CONTAINER. Free it, or set PORT="
+  local port="$1" container="$2" override="$3"
+  if port_in_use "$port" && ! container_running "$container"; then
+    die "port $port is held by something other than $container. Free it, or set $override="
   fi
-  ok "port $PORT is available"
+  ok "port $port is available"
+}
+
+require_free_ports() {
+  require_free_port "$PORT" "$CONTAINER" PORT
+  require_free_port "$SIGNAL_PORT" "$SIGNAL_CONTAINER" SIGNAL_PORT
 }

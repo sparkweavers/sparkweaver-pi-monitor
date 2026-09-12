@@ -13,5 +13,5 @@ select_docker_runner() {
 compose() { "${DOCKER[@]}" compose "$@"; }
 
 container_running() {
-  "${DOCKER[@]}" ps --format '{{.Names}}' 2>/dev/null | grep -qx "$CONTAINER"
+  "${DOCKER[@]}" ps --format '{{.Names}}' 2>/dev/null | grep -qx "${1:-$CONTAINER}"
 }

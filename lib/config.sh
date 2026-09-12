@@ -20,6 +20,22 @@ readonly NETBIRD_WAIT_ATTEMPTS=10
 readonly TUNNEL_PEER_FQDN="${TUNNEL_PEER_FQDN:-database-server.netbird.cloud}"
 readonly TUNNEL_HOSTNAMES=(supabase.sparkweaver.app supabase-staging.sparkweaver.app)
 
+readonly SIGNAL_SERVICE=signal-cli-rest-api
+readonly SIGNAL_CONTAINER="${SIGNAL_CONTAINER:-signal-cli-rest-api}"
+# Unpinned on purpose. Signal rejects clients that fall too far behind, so this
+# image has to keep moving.
+readonly SIGNAL_IMAGE="${SIGNAL_IMAGE:-bbernhard/signal-cli-rest-api:latest}"
+readonly SIGNAL_VOLUME="${SIGNAL_VOLUME:-signal-cli-data}"
+readonly SIGNAL_PORT="${SIGNAL_PORT:-8080}"
+readonly SIGNAL_CONTAINER_PORT=8080
+# normal spawns signal-cli per request. Slower than the daemon modes, but a
+# freshly linked account needs no restart to be picked up.
+readonly SIGNAL_MODE="${SIGNAL_MODE:-normal}"
+readonly SIGNAL_DEVICE_NAME="${SIGNAL_DEVICE_NAME:-uptime-kuma}"
+readonly SIGNAL_WAIT_ATTEMPTS=60
+readonly SIGNAL_LINK_ATTEMPTS=150
+readonly SIGNAL_TIMEOUT=5
+
 readonly DATA_MOUNT=/app/data
 readonly DATABASE_FILE=kuma.db
 readonly BACKUP_DIR="${BACKUP_DIR:-$HOME/uptime-kuma-backups}"
