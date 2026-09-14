@@ -3,7 +3,7 @@
 provision_kuma() {
   if [ -z "$KUMA_ADMIN_USER" ] || [ -z "$KUMA_ADMIN_PASSWORD" ]; then
     note "KUMA_ADMIN_USER and KUMA_ADMIN_PASSWORD are both required to provision."
-    note "Create the admin account in the dashboard before anyone else does."
+    note "They sign in to Uptime Kuma, or create the admin if there is not one yet."
     return 0
   fi
   "${DOCKER[@]}" run --rm --network host \
