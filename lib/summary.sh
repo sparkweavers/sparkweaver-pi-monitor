@@ -11,6 +11,20 @@ print_summary() {
   printf '\n  History lives in the %s volume and survives "docker compose down".\n\n' "$VOLUME"
 }
 
+# Read from the data file so the printed URL and the provisioned page cannot drift.
+status_page_slug() {
+  grep -o '"slug"[[:space:]]*:[[:space:]]*"[^"]*"' "$STATUS_PAGES_FILE" 2>/dev/null |
+    head -1 | cut -d'"' -f4
+}
+
+print_status_page_hint() {
+  local slug
+  slug="$(status_page_slug)"
+  [ -n "$slug" ] || return 0
+  printf '  The status page needs no login. Anyone who can reach this host can read it.\n\n'
+  printf '    http://%s:%s/status/%s\n\n' "$(primary_ip)" "$PORT" "$slug"
+}
+
 print_signal_hint() {
   if [ -n "$(linked_number)" ]; then
     print_signal_summary

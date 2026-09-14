@@ -2,16 +2,19 @@ import json
 import os
 import sys
 
+from kuma_status_pages import ensure_status_page
 from uptime_kuma_api import MonitorType, UptimeKumaApi
 
 URL = os.environ["KUMA_URL"]
 USER = os.environ["KUMA_ADMIN_USER"]
 PASSWORD = os.environ["KUMA_ADMIN_PASSWORD"]
 MONITORS_FILE = os.environ["KUMA_MONITORS_FILE"]
+STATUS_PAGES_FILE = os.environ["KUMA_STATUS_PAGES_FILE"]
 
 # Keys a re-run pushes onto monitors that already exist. Anything outside this
 # set stays as the dashboard left it.
 RECONCILED = ("url", "interval", "accepted_statuscodes")
+STATES = ("added", "updated", "unchanged")
 
 
 def read_specs(path):
@@ -69,15 +72,24 @@ def ensure_monitor(api, spec, index):
     return "added"
 
 
+def report(label, results):
+    counts = (f"{results.count(state)} {state}" for state in STATES)
+    print(f"{label}: {', '.join(counts)}")
+
+
 def main():
     specs = read_specs(MONITORS_FILE)
+    pages = read_specs(STATUS_PAGES_FILE)
     with UptimeKumaApi(URL) as api:
         print(f"admin account {ensure_admin(api)}")
         api.login(USER, PASSWORD)
         index = index_by_name(api)
-        results = [ensure_monitor(api, spec, index) for spec in specs]
-        for state in ("added", "updated", "unchanged"):
-            print(f"{results.count(state)} {state}")
+        report("monitors", [ensure_monitor(api, spec, index) for spec in specs])
+        slugs = {page["slug"] for page in api.get_status_pages()}
+        report(
+            "status pages",
+            [ensure_status_page(api, page, specs, index, slugs) for page in pages],
+        )
     return 0
 
 

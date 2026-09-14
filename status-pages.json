@@ -1,0 +1,11 @@
+[
+  {
+    "slug": "sparkweaver",
+    "title": "Sparkweaver",
+    "description": "Live status of the Sparkweaver services.",
+    "theme": "auto",
+    "published": true,
+    "showPoweredBy": false,
+    "groups": ["Sparkweaver"]
+  }
+]
