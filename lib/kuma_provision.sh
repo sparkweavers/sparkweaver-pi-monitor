@@ -2,9 +2,9 @@
 
 provision_kuma() {
   if [ -z "$KUMA_ADMIN_USER" ] || [ -z "$KUMA_ADMIN_PASSWORD" ]; then
-    note "No monitors and no status pages were created. That needs your Kuma login."
+    note "You need a password to run this script fully."
+    note "Without one it installs Uptime Kuma and stops there."
     note "Set KUMA_ADMIN_USER and KUMA_ADMIN_PASSWORD, then run this again."
-    note "On a first install those two values become the admin account."
     return 0
   fi
   "${DOCKER[@]}" run --rm --network host \
