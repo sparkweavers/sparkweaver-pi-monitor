@@ -1,0 +1,10 @@
+[
+  {
+    "slug": "personal",
+    "title": "Personal",
+    "description": "Everything I host myself.",
+    "theme": "auto",
+    "published": true,
+    "groups": ["Personal"]
+  }
+]

@@ -52,11 +52,12 @@ main() {
   step "Waiting for Uptime Kuma to answer"
   wait_until_healthy
 
-  step "Provisioning the admin account and monitors"
+  step "Provisioning the admin account, monitors and status pages"
   provision_kuma
 
   print_summary
   print_allowlist_hint
+  print_status_page_hint
   print_signal_hint
 }
 
