@@ -26,6 +26,15 @@ can reach the host.
 cd ~/sparkweaver-pi-monitor && ./link-signal.sh
 ```
 
+## Start it again after a stop
+
+The container restarts itself on boot, so a reboot needs nothing. This is for the
+case where it was stopped by hand and you want it back without re-provisioning.
+
+```
+cd ~/sparkweaver-pi-monitor && ./start.sh
+```
+
 ## Update Uptime Kuma
 
 ```
