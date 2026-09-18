@@ -18,8 +18,6 @@ source "$SCRIPT_DIR/lib/preflight.sh"
 source "$SCRIPT_DIR/lib/kuma.sh"
 # shellcheck source=lib/update.sh
 source "$SCRIPT_DIR/lib/update.sh"
-# shellcheck source=lib/start.sh
-source "$SCRIPT_DIR/lib/start.sh"
 # shellcheck source=lib/summary.sh
 source "$SCRIPT_DIR/lib/summary.sh"
 
@@ -29,7 +27,7 @@ main() {
   select_docker_runner
   require_installed
 
-  if already_answering; then
+  if already_running; then
     ok "$CONTAINER is already answering on port $PORT"
   else
     step "Starting the container"

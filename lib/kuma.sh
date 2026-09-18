@@ -47,24 +47,46 @@ write_compose_file() {
   ok "wrote $INSTALL_DIR/docker-compose.yml"
 }
 
-start_stack() {
+enter_install_dir() {
   cd "$INSTALL_DIR" || die "cannot enter $INSTALL_DIR"
-  compose pull
+}
+
+# Reaches the registry only on the way in, so a stack that is merely stopped can
+# come back without the network.
+resume_stack() {
+  enter_install_dir
   compose up -d
   ok "container started"
 }
 
+start_stack() {
+  enter_install_dir
+  compose pull
+  resume_stack
+}
+
 stop_stack() {
-  cd "$INSTALL_DIR" || die "cannot enter $INSTALL_DIR"
+  enter_install_dir
   compose down
   ok "container stopped, the $VOLUME volume is untouched"
 }
 
+# Prints the code it accepted, so callers can report it without asking twice.
+answering() {
+  local code
+  code="$(http_code "$KUMA_URL")"
+  contains "$code" "${HEALTHY_CODES[@]}" || return 1
+  printf '%s' "$code"
+}
+
+already_running() {
+  container_running "$CONTAINER" && answering >/dev/null
+}
+
 wait_until_healthy() {
-  local url="http://127.0.0.1:${PORT}" code attempt
+  local code attempt
   for ((attempt = 0; attempt < WAIT_ATTEMPTS; attempt++)); do
-    code="$(http_code "$url")"
-    if contains "$code" "${HEALTHY_CODES[@]}"; then
+    if code="$(answering)"; then
       ok "answered with HTTP $code"
       return 0
     fi

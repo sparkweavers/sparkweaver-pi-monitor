@@ -12,6 +12,7 @@ readonly WAIT_ATTEMPTS=60
 readonly WAIT_INTERVAL=2
 readonly SUPPORTED_ARCHS=(aarch64 arm64 x86_64 amd64)
 readonly HEALTHY_CODES=(200 302)
+readonly KUMA_URL="http://127.0.0.1:${PORT}"
 readonly MANAGE_COMMANDS=(ps "logs -f" restart)
 
 readonly NETBIRD_SETUP_KEY="${NETBIRD_SETUP_KEY:-}"
