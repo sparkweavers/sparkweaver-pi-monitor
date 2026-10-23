@@ -13,6 +13,20 @@ extra_hosts_block() {
   done
 }
 
+# A compose file that already tunnels these hosts must not be rewritten without
+# them, because the Supabase monitors would then fail for no visible reason.
+require_tunnel_not_lost() {
+  if [ -n "$(peer_ip_by_fqdn "$TUNNEL_PEER_FQDN")" ]; then
+    return 0
+  fi
+  grep -q 'extra_hosts:' "$INSTALL_DIR/docker-compose.yml" 2>/dev/null || return 0
+  note "peer $TUNNEL_PEER_FQDN is unknown, yet $INSTALL_DIR/docker-compose.yml"
+  note "tunnels ${TUNNEL_HOSTNAMES[*]} through it."
+  note "The running container is untouched, so monitoring carries on meanwhile."
+  note 'Bring the peer back with "sudo netbird up", then run this again.'
+  die "stopping rather than rewriting the compose file without the tunnelled hosts"
+}
+
 kuma_service_block() {
   cat <<YAML
 services:
