@@ -2,6 +2,7 @@ import json
 import os
 import sys
 
+import kuma_env
 from kuma_status_pages import ensure_status_page
 from uptime_kuma_api import MonitorType, UptimeKumaApi
 
@@ -13,8 +14,17 @@ STATUS_PAGES_FILE = os.environ["KUMA_STATUS_PAGES_FILE"]
 
 # Keys a re-run pushes onto monitors that already exist. Anything outside this
 # set stays as the dashboard left it.
-RECONCILED = ("url", "interval", "accepted_statuscodes", "parent")
-STATES = ("added", "updated", "unchanged")
+RECONCILED = (
+    "url",
+    "interval",
+    "accepted_statuscodes",
+    "parent",
+    "jsonPath",
+    "expectedValue",
+    "jsonPathOperator",
+    "headers",
+)
+STATES = ("added", "updated", "unchanged", "skipped")
 
 
 def read_specs(path):
@@ -67,11 +77,25 @@ def ensure_monitor(api, spec, index):
         spec["parent"] = ensure_group(api, group, index)
     if name in index:
         return reconcile(api, index[name], spec)
+    # add_monitor has no jsonPathOperator parameter, so it is set on the edit
+    # that follows creation, within the same "added" result.
+    operator = spec.pop("jsonPathOperator", None)
     spec["type"] = MonitorType(spec["type"])
     response = api.add_monitor(**spec)
-    index[name] = {"id": response["monitorID"], "name": name}
+    monitor_id = response["monitorID"]
+    if operator:
+        api.edit_monitor(monitor_id, jsonPathOperator=operator)
+    index[name] = {"id": monitor_id, "name": name}
     print(f"added monitor {name}")
     return "added"
+
+
+def ensure_or_skip(api, spec, index):
+    variable = kuma_env.unresolved(spec)
+    if variable:
+        print(f"skipped {spec['name']}: {variable} is not set")
+        return "skipped"
+    return ensure_monitor(api, spec, index)
 
 
 def report(label, results):
@@ -80,13 +104,13 @@ def report(label, results):
 
 
 def main():
-    specs = read_specs(MONITORS_FILE)
+    specs = kuma_env.substitute(read_specs(MONITORS_FILE))
     pages = read_specs(STATUS_PAGES_FILE)
     with UptimeKumaApi(URL) as api:
         print(f"admin account {ensure_admin(api)}")
         api.login(USER, PASSWORD)
         index = index_by_name(api)
-        report("monitors", [ensure_monitor(api, spec, index) for spec in specs])
+        report("monitors", [ensure_or_skip(api, spec, index) for spec in specs])
         slugs = {page["slug"] for page in api.get_status_pages()}
         report(
             "status pages",

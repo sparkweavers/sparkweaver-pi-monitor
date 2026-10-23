@@ -126,5 +126,27 @@
     "group": "QRD",
     "interval": 300,
     "accepted_statuscodes": ["400"]
+  },
+  {
+    "type": "json-query",
+    "name": "QRD Events feed contract",
+    "url": "https://queer-refugees.de/wp-json/qr-feed/v1/events?period=past&limit=1",
+    "group": "QRD",
+    "interval": 3600,
+    "headers": "{\"X-API-Key\": \"${QRD_FEED_API_KEY}\"}",
+    "jsonPath": "$join($sort($keys($)), \",\") & \"||\" & $join($sort($keys($.events[0])), \",\")",
+    "jsonPathOperator": "==",
+    "expectedValue": "count,events,lang,period||all_day,categories,currency,description_html,description_text,end,id,image,location,online,price,registration,seats,start,title,url"
+  },
+  {
+    "type": "json-query",
+    "name": "QRD Directory feed contract",
+    "url": "https://queer-refugees.de/wp-json/qr-feed/v1/directory?lang=de",
+    "group": "QRD",
+    "interval": 3600,
+    "headers": "{\"X-API-Key\": \"${QRD_FEED_API_KEY}\"}",
+    "jsonPath": "$join($sort($keys($)), \",\") & \"||\" & $join($sort($keys($.items[0])), \",\")",
+    "jsonPathOperator": "==",
+    "expectedValue": "all_categories,count,filter,items,lang||additional_url,address,categories,description_html,description_text,emails,id,image,lat,lng,name,phones,url,website"
   }
 ]
