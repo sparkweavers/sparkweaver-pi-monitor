@@ -55,22 +55,8 @@ cd ~/sparkweaver-pi-monitor && ./start.sh
 cd ~/sparkweaver-pi-monitor && ./update.sh
 ```
 
-The pinned tag is `louislam/uptime-kuma:2`. The `1` line stopped at 1.23.17 on
-Node 18, which no longer receives Node security fixes, so it is not an option
-however long it stays installed.
+Coming from 1.x rewrites the database and cannot be undone, so prefix that one
+run with `ALLOW_MAJOR_UPGRADE=1`. The volume is backed up first.
 
-Moving an instance from 1.x rewrites the database on first boot and cannot be
-undone, which is why `update.sh` asks for `ALLOW_MAJOR_UPGRADE=1` once:
-
-```
-cd ~/sparkweaver-pi-monitor && ALLOW_MAJOR_UPGRADE=1 ./update.sh
-```
-
-The monitors, groups, status pages and history all migrate. It backs the volume
-up first and prints a restore path.
-
-**Provisioning does not work on 2.x yet.** Neither Python client reaches a 2.x
-instance, so `install.sh` aborts at its provisioning step after the upgrade.
-What is already in the database keeps running, and `start.sh` and `update.sh` are
-unaffected, but editing `monitors.json` or `status-pages.json` has no route onto
-the instance until that is ported.
+Provisioning does not work on 2.x yet, so `install.sh` stops at that step.
+`start.sh` and `update.sh` are unaffected.
