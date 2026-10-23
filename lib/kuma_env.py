@@ -1,3 +1,4 @@
+import json
 import os
 import re
 
@@ -5,7 +6,12 @@ PLACEHOLDER = re.compile(r"\$\{(\w+)\}")
 
 
 def _replace(match):
-    return os.environ.get(match.group(1), match.group(0))
+    value = os.environ.get(match.group(1))
+    if value is None:
+        return match.group(0)
+    # The placeholder sits inside a JSON string, so a quote or backslash in the
+    # value has to be escaped rather than pasted in raw.
+    return json.dumps(value)[1:-1]
 
 
 def substitute(specs):
