@@ -7,5 +7,14 @@
     "published": true,
     "showPoweredBy": false,
     "groups": ["Sparkweaver"]
+  },
+  {
+    "slug": "qrd",
+    "title": "QRD",
+    "description": "Live status of the Queer Refugees Deutschland services.",
+    "theme": "auto",
+    "published": true,
+    "showPoweredBy": false,
+    "groups": ["QRD"]
   }
 ]

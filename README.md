@@ -18,7 +18,13 @@ shows. Both are pushed on every run, so editing a file and re-running is how you
 change what is watched and what is published.
 
 A status page is served without a login, so treat it as readable by anyone who
-can reach the host.
+can reach the host. Each project gets its own page, because publishing one
+project's services on another's page hands them to the wrong audience.
+
+A group reaches a status page only when a page names it, so a new group in
+`monitors.json` is half the job. A group that is missing from the dashboard or a
+page is never a reason to wipe the volume: a re-run creates the group, moves
+existing monitors into it and leaves every bit of history alone.
 
 A monitor name has to be unique across every group, because a re-run matches
 what is already there by name alone. Prefix the name with the project when a
