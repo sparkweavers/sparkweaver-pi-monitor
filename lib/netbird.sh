@@ -4,15 +4,20 @@ netbird_connected() {
   sudo netbird status 2>/dev/null | grep -q 'Management: Connected'
 }
 
+# NetBird reports the address with its mask, which is no use as a host entry or
+# as a /32, so every caller gets it stripped.
+strip_mask() { printf '%s' "${1%%/*}"; }
+
 netbird_peer_ip() {
-  sudo netbird status 2>/dev/null | awk -F': *' '/NetBird IP:/ {print $2; exit}'
+  strip_mask "$(sudo netbird status 2>/dev/null |
+    awk -F': *' '/NetBird IP:/ {print $2; exit}')"
 }
 
 peer_ip_by_fqdn() {
-  sudo netbird status -d 2>/dev/null | awk -v want="$1:" '
+  strip_mask "$(sudo netbird status -d 2>/dev/null | awk -v want="$1:" '
     $1 == want { found = 1; next }
     found && $1 == "NetBird" && $2 == "IP:" { print $3; exit }
-  '
+  ')"
 }
 
 install_netbird_agent() {
