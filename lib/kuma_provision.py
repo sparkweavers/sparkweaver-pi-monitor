@@ -13,7 +13,7 @@ STATUS_PAGES_FILE = os.environ["KUMA_STATUS_PAGES_FILE"]
 
 # Keys a re-run pushes onto monitors that already exist. Anything outside this
 # set stays as the dashboard left it.
-RECONCILED = ("url", "interval", "accepted_statuscodes")
+RECONCILED = ("url", "interval", "accepted_statuscodes", "parent")
 STATES = ("added", "updated", "unchanged")
 
 
@@ -61,10 +61,12 @@ def ensure_monitor(api, spec, index):
     spec = dict(spec)
     group = spec.pop("group", None)
     name = spec["name"]
-    if name in index:
-        return reconcile(api, index[name], spec)
+    # The group is resolved before the branch so a monitor that already exists
+    # outside it is moved in by a re-run rather than needing the data wiped.
     if group:
         spec["parent"] = ensure_group(api, group, index)
+    if name in index:
+        return reconcile(api, index[name], spec)
     spec["type"] = MonitorType(spec["type"])
     response = api.add_monitor(**spec)
     index[name] = {"id": response["monitorID"], "name": name}
