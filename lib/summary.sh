@@ -17,10 +17,23 @@ status_page_slugs() {
     cut -d'"' -f4
 }
 
+# The slugs come from the data file, so without a provisioning run they are an
+# intention rather than a page anyone can open.
+print_nothing_pushed_hint() {
+  printf '  Nothing in this repo was pushed to Uptime Kuma, so its monitors, groups\n'
+  printf '  and status pages are NOT on this instance, however often you re-run.\n\n'
+  printf '  Set both and run this again:\n\n'
+  printf "    KUMA_ADMIN_USER='...' KUMA_ADMIN_PASSWORD='...' ./install.sh\n\n"
+}
+
 print_status_page_hint() {
   local slugs slug ip
   slugs="$(status_page_slugs)"
   [ -n "$slugs" ] || return 0
+  if [ "${PROVISIONED:-1}" != "1" ]; then
+    print_nothing_pushed_hint
+    return 0
+  fi
   ip="$(primary_ip)"
   printf '  A status page needs no login. Anyone who can reach this host can read it.\n\n'
   while read -r slug; do
