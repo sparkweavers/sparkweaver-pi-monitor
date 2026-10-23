@@ -54,3 +54,9 @@ cd ~/sparkweaver-pi-monitor && ./start.sh
 ```
 cd ~/sparkweaver-pi-monitor && ./update.sh
 ```
+
+Coming from 1.x rewrites the database and cannot be undone, so prefix that one
+run with `ALLOW_MAJOR_UPGRADE=1`. The volume is backed up first.
+
+Provisioning does not work on 2.x yet, so `install.sh` stops at that step.
+`start.sh` and `update.sh` are unaffected.

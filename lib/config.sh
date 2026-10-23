@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 readonly INSTALL_DIR="${INSTALL_DIR:-/opt/uptime-kuma}"
-readonly IMAGE="${IMAGE:-louislam/uptime-kuma:1}"
+readonly IMAGE="${IMAGE:-louislam/uptime-kuma:2}"
 readonly PORT="${PORT:-3001}"
 readonly CONTAINER="${CONTAINER:-uptime-kuma}"
 readonly VOLUME="${VOLUME:-uptime-kuma-data}"

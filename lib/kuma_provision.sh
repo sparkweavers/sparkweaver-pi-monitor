@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Whether this run pushed the data files. The summary reads it so it cannot
+# advertise a status page that was never created.
+# shellcheck disable=SC2034
+PROVISIONED=0
+
 provision_kuma() {
   if [ -z "$KUMA_ADMIN_USER" ] || [ -z "$KUMA_ADMIN_PASSWORD" ]; then
     note "You need a password to run this script fully."
@@ -18,4 +23,5 @@ provision_kuma() {
     --env "KUMA_STATUS_PAGES_FILE=/status-pages.json" \
     "$PYTHON_IMAGE" \
     sh -c "pip install --quiet --disable-pip-version-check --root-user-action=ignore $API_PACKAGE && python /provision/kuma_provision.py"
+  PROVISIONED=1
 }
