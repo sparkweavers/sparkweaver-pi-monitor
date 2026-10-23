@@ -78,5 +78,53 @@
     "group": "Sparkweaver",
     "interval": 300,
     "accepted_statuscodes": ["200-299"]
+  },
+  {
+    "type": "http",
+    "name": "QRD Backend production",
+    "url": "https://backend.flucht-und-queer.lsvd.de/health/ready",
+    "group": "QRD",
+    "interval": 300,
+    "accepted_statuscodes": ["200-299"]
+  },
+  {
+    "type": "http",
+    "name": "QRD Moodle production",
+    "url": "https://moodle.flucht-und-queer.lsvd.de/login/index.php",
+    "group": "QRD",
+    "interval": 300,
+    "accepted_statuscodes": ["200-299"]
+  },
+  {
+    "type": "http",
+    "name": "QRD Supabase Auth production",
+    "url": "https://db.flucht-und-queer.lsvd.de/auth/v1/verify",
+    "group": "QRD",
+    "interval": 300,
+    "accepted_statuscodes": ["400"]
+  },
+  {
+    "type": "http",
+    "name": "QRD Backend staging",
+    "url": "https://backend-staging.flucht-und-queer.lsvd.de/health/ready",
+    "group": "QRD",
+    "interval": 300,
+    "accepted_statuscodes": ["200-299"]
+  },
+  {
+    "type": "http",
+    "name": "QRD Moodle staging",
+    "url": "https://moodle-staging.flucht-und-queer.lsvd.de/login/index.php",
+    "group": "QRD",
+    "interval": 300,
+    "accepted_statuscodes": ["200-299"]
+  },
+  {
+    "type": "http",
+    "name": "QRD Supabase Auth staging",
+    "url": "https://db-staging.flucht-und-queer.lsvd.de/auth/v1/verify",
+    "group": "QRD",
+    "interval": 300,
+    "accepted_statuscodes": ["400"]
   }
 ]

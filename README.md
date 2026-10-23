@@ -20,7 +20,15 @@ change what is watched and what is published.
 A status page is served without a login, so treat it as readable by anyone who
 can reach the host.
 
+A monitor name has to be unique across every group, because a re-run matches
+what is already there by name alone. Prefix the name with the project when a
+second group watches the same kind of service.
+
 ## Link Signal for alerts
+
+A notification is picked per monitor and a group does not pass its own down to
+the members, so a new group needs the notification ticked on each of its
+monitors. A re-run of `install.sh` leaves those ticks alone.
 
 ```
 cd ~/sparkweaver-pi-monitor && ./link-signal.sh
