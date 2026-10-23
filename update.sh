@@ -37,6 +37,7 @@ main() {
 
   step "Checking the upgrade is safe"
   require_major_allowed
+  require_tunnel_not_lost
 
   step "Fetching the newest image"
   before="$(image_digest)"

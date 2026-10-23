@@ -44,6 +44,7 @@ main() {
   ensure_netbird
 
   step "Writing the compose file"
+  require_tunnel_not_lost
   write_compose_file
 
   step "Starting the container"
