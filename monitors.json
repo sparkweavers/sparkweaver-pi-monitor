@@ -148,5 +148,35 @@
     "jsonPath": "$join($sort($keys($)), \",\") & \"||\" & $join($sort($keys($.items[0])), \",\")",
     "jsonPathOperator": "==",
     "expectedValue": "all_categories,count,filter,items,lang||additional_url,address,categories,description_html,description_text,emails,id,image,lat,lng,name,phones,url,website"
+  },
+  {
+    "type": "json-query",
+    "name": "QRD SSH bans Moodle host",
+    "url": "https://moodle.flucht-und-queer.lsvd.de/fail2ban-status.json",
+    "group": "QRD",
+    "interval": 60,
+    "jsonPath": "status",
+    "jsonPathOperator": "==",
+    "expectedValue": "ok"
+  },
+  {
+    "type": "json-query",
+    "name": "QRD SSH bans Supabase host",
+    "url": "https://db.flucht-und-queer.lsvd.de/fail2ban-status.json",
+    "group": "QRD",
+    "interval": 60,
+    "jsonPath": "status",
+    "jsonPathOperator": "==",
+    "expectedValue": "ok"
+  },
+  {
+    "type": "json-query",
+    "name": "QRD SSH bans Backend host",
+    "url": "https://backend.flucht-und-queer.lsvd.de/fail2ban-status.json",
+    "group": "QRD",
+    "interval": 60,
+    "jsonPath": "status",
+    "jsonPathOperator": "==",
+    "expectedValue": "ok"
   }
 ]
