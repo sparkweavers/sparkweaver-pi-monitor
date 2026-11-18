@@ -1,11 +1,12 @@
 import json
 import os
 import sys
+import time
 
 import kuma_env
 from kuma_status_pages import ensure_status_page
 from uptime_kuma_client import MonitorType, UptimeKumaApi
-from uptime_kuma_client.exceptions import Timeout
+from uptime_kuma_client.exceptions import Timeout, UptimeKumaException
 
 URL = os.environ["KUMA_URL"]
 USER = os.environ["KUMA_ADMIN_USER"]
@@ -27,10 +28,11 @@ RECONCILED = (
     "headers",
 )
 STATES = ("added", "updated", "unchanged", "skipped")
-HANG_HINT = (
-    "Uptime Kuma is serving HTTP but its API is not answering. "
-    "Run docker restart uptime-kuma, then try again."
-)
+# The server registers its socket handlers only after an await, so a first call
+# can arrive before they exist and socket.io then drops it unanswered.
+FIRST_CALL_ATTEMPTS = 5
+FIRST_CALL_WAIT = 3
+HANG_HINT = f"unanswered {FIRST_CALL_ATTEMPTS} times. Check docker logs uptime-kuma."
 
 
 def read_specs(path):
@@ -40,8 +42,19 @@ def read_specs(path):
         return json.load(handle)
 
 
+def first_call(call):
+    for attempt in range(FIRST_CALL_ATTEMPTS):
+        try:
+            return call()
+        except Timeout:
+            if attempt == FIRST_CALL_ATTEMPTS - 1:
+                raise
+            print(f"no answer yet, retrying in {FIRST_CALL_WAIT}s")
+            time.sleep(FIRST_CALL_WAIT)
+
+
 def ensure_admin(api):
-    if api.need_setup():
+    if first_call(api.need_setup):
         api.setup(USER, PASSWORD)
         return "created"
     return "exists"
@@ -122,9 +135,10 @@ def main():
     try:
         provision(specs, pages)
     except Timeout as error:
-        # Serving HTTP while the API hangs means the database layer is stuck,
-        # which a restart clears and a longer timeout does not.
-        print(f"{error}. {HANG_HINT}", file=sys.stderr)
+        print(f"{error}, {HANG_HINT}", file=sys.stderr)
+        return 1
+    except UptimeKumaException as error:
+        print(f"Uptime Kuma refused the call: {error}", file=sys.stderr)
         return 1
     return 0
 
