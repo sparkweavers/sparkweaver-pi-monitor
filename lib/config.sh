@@ -51,3 +51,6 @@ readonly MONITORS_FILE="${MONITORS_FILE:-$SCRIPT_DIR/monitors.json}"
 readonly STATUS_PAGES_FILE="${STATUS_PAGES_FILE:-$SCRIPT_DIR/status-pages.json}"
 readonly PYTHON_IMAGE="${PYTHON_IMAGE:-python:3.12-slim}"
 readonly API_PACKAGE="${API_PACKAGE:-https://github.com/JanusCoetzee/uptime-kuma-client/archive/89d78d0ad03a732e91c764ef84d2d0d847fd7183.tar.gz}"
+# Well above the library default of ten seconds, because a Pi answers its first
+# database backed call slowly while the container is still warming up.
+readonly KUMA_API_TIMEOUT="${KUMA_API_TIMEOUT:-60}"
