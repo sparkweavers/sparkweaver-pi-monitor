@@ -51,3 +51,6 @@ readonly MONITORS_FILE="${MONITORS_FILE:-$SCRIPT_DIR/monitors.json}"
 readonly STATUS_PAGES_FILE="${STATUS_PAGES_FILE:-$SCRIPT_DIR/status-pages.json}"
 readonly PYTHON_IMAGE="${PYTHON_IMAGE:-python:3.12-slim}"
 readonly API_PACKAGE="${API_PACKAGE:-https://github.com/JanusCoetzee/uptime-kuma-client/archive/89d78d0ad03a732e91c764ef84d2d0d847fd7183.tar.gz}"
+# Above the library default of ten seconds, since a Pi serving twenty monitors
+# from one SQLite connection answers a provisioning call slowly.
+readonly KUMA_API_TIMEOUT="${KUMA_API_TIMEOUT:-20}"

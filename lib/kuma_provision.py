@@ -1,16 +1,19 @@
 import json
 import os
 import sys
+import time
 
 import kuma_env
 from kuma_status_pages import ensure_status_page
 from uptime_kuma_client import MonitorType, UptimeKumaApi
+from uptime_kuma_client.exceptions import Timeout, UptimeKumaException
 
 URL = os.environ["KUMA_URL"]
 USER = os.environ["KUMA_ADMIN_USER"]
 PASSWORD = os.environ["KUMA_ADMIN_PASSWORD"]
 MONITORS_FILE = os.environ["KUMA_MONITORS_FILE"]
 STATUS_PAGES_FILE = os.environ["KUMA_STATUS_PAGES_FILE"]
+TIMEOUT = float(os.environ["KUMA_API_TIMEOUT"])
 
 # Keys a re-run pushes onto monitors that already exist. Anything outside this
 # set stays as the dashboard left it.
@@ -25,6 +28,11 @@ RECONCILED = (
     "headers",
 )
 STATES = ("added", "updated", "unchanged", "skipped")
+# The server registers its socket handlers only after an await, so a first call
+# can arrive before they exist and socket.io then drops it unanswered.
+FIRST_CALL_ATTEMPTS = 5
+FIRST_CALL_WAIT = 3
+HANG_HINT = f"unanswered {FIRST_CALL_ATTEMPTS} times. Check docker logs uptime-kuma."
 
 
 def read_specs(path):
@@ -34,8 +42,19 @@ def read_specs(path):
         return json.load(handle)
 
 
+def first_call(call):
+    for attempt in range(FIRST_CALL_ATTEMPTS):
+        try:
+            return call()
+        except Timeout:
+            if attempt == FIRST_CALL_ATTEMPTS - 1:
+                raise
+            print(f"no answer yet, retrying in {FIRST_CALL_WAIT}s")
+            time.sleep(FIRST_CALL_WAIT)
+
+
 def ensure_admin(api):
-    if api.need_setup():
+    if first_call(api.need_setup):
         api.setup(USER, PASSWORD)
         return "created"
     return "exists"
@@ -97,10 +116,8 @@ def report(label, results):
     print(f"{label}: {', '.join(counts)}")
 
 
-def main():
-    specs = kuma_env.substitute(read_specs(MONITORS_FILE))
-    pages = read_specs(STATUS_PAGES_FILE)
-    with UptimeKumaApi(URL) as api:
+def provision(specs, pages):
+    with UptimeKumaApi(URL, timeout=TIMEOUT) as api:
         print(f"admin account {ensure_admin(api)}")
         api.login(USER, PASSWORD)
         index = index_by_name(api)
@@ -110,6 +127,19 @@ def main():
             "status pages",
             [ensure_status_page(api, page, specs, index, slugs) for page in pages],
         )
+
+
+def main():
+    specs = kuma_env.substitute(read_specs(MONITORS_FILE))
+    pages = read_specs(STATUS_PAGES_FILE)
+    try:
+        provision(specs, pages)
+    except Timeout as error:
+        print(f"{error}, {HANG_HINT}", file=sys.stderr)
+        return 1
+    except UptimeKumaException as error:
+        print(f"Uptime Kuma refused the call: {error}", file=sys.stderr)
+        return 1
     return 0
 
 

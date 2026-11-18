@@ -20,6 +20,7 @@ provision_kuma() {
     --env "KUMA_ADMIN_USER=$KUMA_ADMIN_USER" \
     --env "KUMA_ADMIN_PASSWORD=$KUMA_ADMIN_PASSWORD" \
     --env "QRD_FEED_API_KEY=$QRD_FEED_API_KEY" \
+    --env "KUMA_API_TIMEOUT=$KUMA_API_TIMEOUT" \
     --env "KUMA_MONITORS_FILE=/monitors.json" \
     --env "KUMA_STATUS_PAGES_FILE=/status-pages.json" \
     "$PYTHON_IMAGE" \
